@@ -13,9 +13,9 @@ def create_dataframe(file):
         Works for music in all keys.
     """
 
-    df = pd.DataFrame(columns=["step","alter","octave"])
-    df.name=file.split("./data/",1)[1]
-    print(f'Creating Dataframe for {df.name}')
+    df = pd.DataFrame(columns=["step", "alter", "octave"])
+    df.name = file.split("./data/", 1)[1]
+    print(f"Creating Dataframe for {df.name}")
     mysheet = minidom.parse(file)
     notes = mysheet.getElementsByTagName("note")
     index = 0
@@ -26,14 +26,24 @@ def create_dataframe(file):
         tieNode = notes[i].getElementsByTagName("tie")
 
         # If it is not a rest or on the right hand
-        if (len(pitchNode) > 0 and pitchNode[0].nodeName == "pitch" and voiceNode == "1"):
-            if ((len(tieNode) > 0 and tieNode[0].getAttributeNode("type").nodeValue == "start") or len(tieNode) == 0):
-                step = pitchNode[0].getElementsByTagName("step")[0].childNodes[0].nodeValue
-                octave = pitchNode[0].getElementsByTagName("octave")[0].childNodes[0].nodeValue
+        if len(pitchNode) > 0 and pitchNode[0].nodeName == "pitch" and voiceNode == "1":
+            if (
+                len(tieNode) > 0
+                and tieNode[0].getAttributeNode("type").nodeValue == "start"
+            ) or len(tieNode) == 0:
+                step = (
+                    pitchNode[0].getElementsByTagName("step")[0].childNodes[0].nodeValue
+                )
+                octave = (
+                    pitchNode[0]
+                    .getElementsByTagName("octave")[0]
+                    .childNodes[0]
+                    .nodeValue
+                )
                 alter = pitchNode[0].getElementsByTagName("alter")
 
-                if (len(alter) > 0):
-                    if (alter[0].childNodes[0].nodeValue == "1"):
+                if len(alter) > 0:
+                    if alter[0].childNodes[0].nodeValue == "1":
                         alter = "#"
                     else:
                         alter = "b"
@@ -48,6 +58,7 @@ def create_dataframe(file):
 
     return df
 
+
 # Create the hand that we are going to use. All data is initialized to "None", since the initial
 # location of the hand should be determined by the first note that is played.
 hand = [None, None, None, None, None]
@@ -57,15 +68,19 @@ hand = [None, None, None, None, None]
 # i.e. actions[0] is the thumb, actions[1] is the index finger, etc.
 actions = ["1", "2", "3", "4", "5"]
 
+
 def get_next_action(previous_note, current_note, next_note, epsilon):
-    if np.random.random() < epsilon and previous_note != None and next_note != None:          # Take the best finger
+    if (
+        np.random.random() < epsilon and previous_note != None and next_note != None
+    ):  # Take the best finger
         return np.argmax(q.q_values[previous_note, current_note, next_note])
     elif np.random.random() < epsilon and previous_note == None:
         return np.argmax(q.q_values[0, current_note, next_note])
     elif np.random.random() < epsilon and next_note == None:
         return np.argmax(q.q_values[previous_note, current_note, len(q.q_values) - 1])
-    else:                                                                                     # Take a random finger
+    else:  # Take a random finger
         return np.random.randint(5)
+
 
 ## Rewards
 def calculate_reward(note_played, previous_finger, finger):
@@ -80,7 +95,7 @@ def calculate_reward(note_played, previous_finger, finger):
     # When we have calculated the reward/penalty, we reposition the hand and return the reward/penalty.
 
     # If this is the initial note, we want to return 0 (no cost for the first placement) but also reposition the hand.
-    if (hand[0] == None):
+    if hand[0] == None:
         reposition_hand(note_played, finger)
         return 0
     else:

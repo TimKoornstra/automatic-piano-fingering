@@ -9,8 +9,16 @@ import q_learning as q
 if __name__ == "__main__":
     # Create the dataframes here
     print("Creating dataframes...")
-    train = [env.create_dataframe(f'./data/train/{file}') for file in os.listdir("./data/train") if file.endswith(".xml")]
-    test = [env.create_dataframe(f'./data/test/{file}') for file in os.listdir("./data/test") if file.endswith(".xml")]
+    train = [
+        env.create_dataframe(f"./data/train/{file}")
+        for file in os.listdir("./data/train")
+        if file.endswith(".xml")
+    ]
+    test = [
+        env.create_dataframe(f"./data/test/{file}")
+        for file in os.listdir("./data/test")
+        if file.endswith(".xml")
+    ]
     print("Done!")
 
     # Train on the dataframes here
@@ -23,5 +31,5 @@ if __name__ == "__main__":
         output = q.find_optimal_fingering(sheet)
         output.append(None)
         sheet["finger"] = output
-        print(f'Found optimal fingering for {sheet.name}:')
+        print(f"Found optimal fingering for {sheet.name}:")
         print(sheet[:31])

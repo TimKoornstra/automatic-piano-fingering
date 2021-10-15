@@ -11,16 +11,16 @@ def to_numerical(input):
     distances = []
 
     for _, note in input.iterrows():
-        if (note["step"] != "fin"):
+        if note["step"] != "fin":
             distance = full_notes.index(note["step"])
             distance = distance + (int(note["octave"]) - 4) * 8
-            if (note["alter"] == "#"):
-                if (note["step"] == "E" or note["step"] == "B"):
+            if note["alter"] == "#":
+                if note["step"] == "E" or note["step"] == "B":
                     distance = distance + 1
                 else:
                     distance = distance + 0.5
-            elif (note["alter"] == "b"):
-                if (note["step"] == "C" or note["step"] == "F"):
+            elif note["alter"] == "b":
+                if note["step"] == "C" or note["step"] == "F":
                     distance = distance - 1
                 else:
                     distance = distance - 0.5
