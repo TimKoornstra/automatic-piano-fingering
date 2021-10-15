@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 ## Imports
+import os
 import environment as env
 import q_learning as q
 
@@ -8,15 +9,19 @@ import q_learning as q
 if __name__ == "__main__":
     # Create the dataframes here
     print("Creating dataframes...")
-    df1 = env.create_dataframe("../data/the_entertainer.xml")
+    train = [env.create_dataframe(f'./data/train/{file}') for file in os.listdir("./data/train") if file.endswith(".xml")]
+    test = [env.create_dataframe(f'./data/test/{file}') for file in os.listdir("./data/test") if file.endswith(".xml")]
     print("Done!")
 
     # Train on the dataframes here
-    print("Training...")
-    q.train(df1)
+    print("Training Agent...")
+    for sheet in train:
+        q.train(sheet)
 
-    # Find the optimal fingering and output it
-    output = q.find_optimal_fingering(df1)
-    output.append(None)
-    df1["finger"] = output
-    print(df1[:31])
+    # Find the optimal fingerings and output them
+    for sheet in test:
+        output = q.find_optimal_fingering(sheet)
+        output.append(None)
+        sheet["finger"] = output
+        print(f'Found optimal fingering for {sheet.name}:')
+        print(sheet[:31])

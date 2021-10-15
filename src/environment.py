@@ -12,8 +12,10 @@ def create_dataframe(file):
         This function reads an MusicXML file and processes it into a pandas data frame.
         Works for music in all keys.
     """
-    
+
     df = pd.DataFrame(columns=["step","alter","octave"])
+    df.name=file.split("./data/",1)[1]
+    print(f'Creating Dataframe for {df.name}')
     mysheet = minidom.parse(file)
     notes = mysheet.getElementsByTagName("note")
     index = 0

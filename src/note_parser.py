@@ -1,8 +1,5 @@
 # Translating notes to data we can use happens here
 
-## Imports
-import pandas as pd
-
 ## Code
 def to_numerical(input):
     """
@@ -13,7 +10,7 @@ def to_numerical(input):
     full_notes = ["C", "D", "E", "F", "G", "A", "B"]
     distances = []
 
-    for index, note in input.iterrows():
+    for _, note in input.iterrows():
         if (note["step"] != "fin"):
             distance = full_notes.index(note["step"])
             distance = distance + (int(note["octave"]) - 4) * 8

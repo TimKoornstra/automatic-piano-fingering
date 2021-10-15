@@ -29,7 +29,7 @@ def train(data):
     notes = [int((x - lowest_note) * 2) for x in notes]
 
     # Train for x amount of episodes
-    for episode in range(episodes):
+    for _ in range(episodes):
         previous_finger = -1
 
         # Continue until the end of the sheet
